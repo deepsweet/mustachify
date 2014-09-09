@@ -4,10 +4,9 @@ var path = require('path'),
     Hogan = require('hogan.js'),
     htmlMinifier = require('html-minifier').minify;
 
-    // possible extensions
-var extensions = [ '.hogan', '.mustache', '.html' ],
-    // default config
+var // default config
     defaults = {
+        extension: '.html',
         // https://github.com/kangax/html-minifier#options-quick-reference
         minify: {
             removeComments: true,
@@ -17,7 +16,7 @@ var extensions = [ '.hogan', '.mustache', '.html' ],
             conservativeCollapse: false,
             preserveLineBreaks: false,
             collapseBooleanAttributes: true,
-            removeAttributeQuotes: true,
+            removeAttributeQuotes: false,
             removeRedundantAttributes: false,
             removeEmptyAttributes: true,
             removeScriptTypeAttributes: true,
@@ -34,12 +33,12 @@ var extensions = [ '.hogan', '.mustache', '.html' ],
 
 module.exports = function (file, options) {
 
-    if (extensions.indexOf(path.extname(file)) === -1) {
-        return through();
-    }
-
     // get options
     options = extend(true, {}, defaults, options);
+
+    if (path.extname(file) !== options.extension) {
+        return through();
+    }
 
     var buffer = '';
 
